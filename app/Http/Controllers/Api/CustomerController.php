@@ -28,19 +28,32 @@ class CustomerController extends Controller
 
         $token = $user->createToken('token')->plainTextToken;
         $token = explode('|', $token);
-        // dd($token);
+       
+        return response()->json(['token' => $token[1], 'login_id' => $token[0], 'name' => $user->name, 'email' => $user->email, 'success' => 1, 'message' => 'Login Successful'], 202);
+    }
 
-        // if ($user->role_id == 4) {
-        //     $user_status = 'rider';
-        // }
-        // if ($user->role_id == 3) {
-        //     $user_status = 'store';
-        // }
-        // if ($user->role_id == 2) {
-        //     $user_status = 'customer';
-        // }
-        $typ = $user_status . "_status";
-        return response()->json(['token' => $token[1], 'login_id' => $token[0], 'name' => $user->name, 'email' => $user->email, $typ => $user->status, 'success' => 1, 'message' => 'Login Successful'], 202);
+    public function Register(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()[0]], 406);
+        }
+
+        $user = User::create([
+            'name'     => $request->name,
+            'role_id'  => 2,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $token = $user->createToken('token')->plainTextToken;
+        $token = explode('|', $token);
+        return response()->json(['token' => $token[1], 'login_id' => $token[0], 'success' => 1, 'message' => 'Registration Successful'], 201);
     }
 
 }
