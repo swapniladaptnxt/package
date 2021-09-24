@@ -5,8 +5,8 @@ namespace Adaptnxt\Flipkart;
 use GuzzleHttp\Client;
 
 
-// use GuzzleHttp\Exception\ClientException;
-// use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 
 class Flipkart {
     
@@ -42,7 +42,7 @@ class Flipkart {
 
     
 
-    public function getReviews(string $status = 'all', string $source = 'all', int $page = 1){
+    public function getOrders(string $status = 'all', string $source = 'all', int $page = 1){
         return $this->call("/order/info", [
             'source' => $source,
             'status' => $status,
